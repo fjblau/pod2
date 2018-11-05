@@ -3,6 +3,7 @@ pragma solidity 0.4.24;
 contract carrierOrders
 {
     string carrierName;
+    address carrierAddress;
     struct order {
         uint id;
         string orderNo;
@@ -13,14 +14,25 @@ contract carrierOrders
     uint public numOrders;
     mapping (uint => order) orders;
 
-    constructor() public {
-        carrierName = "Carrier One";
+    constructor(string _CarrierName) public {
+        carrierName = _CarrierName;
+        carrierAddress = msg.sender;
         addOrderToCarrier("Order One", "Created", block.timestamp);
         addOrderToCarrier("Order Two", "Created", block.timestamp);
+        addOrderToCarrier("Order Three", "Created", block.timestamp);
+        addOrderToCarrier("Order Four", "Created", block.timestamp);
+    }
+
+    function returnCarrier() public view returns (string _Carrier, address _Address, uint _NumOrders) {
+        return (carrierName, carrierAddress, numOrders);
     }
 
     function returnCarrierName() public view returns (string _Carrier){
         return (carrierName);
+    }
+
+    function returnCarrierAddress() public view returns (address _Carrier){
+        return (carrierAddress);
     }
 
     function getNumOrders()  public view returns (uint _NumOrders){
