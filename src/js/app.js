@@ -10,7 +10,7 @@ App = {
       App.web3Provider = web3.currentProvider;
       web3 = new Web3(web3.currentProvider);
     } else {
-      App.web3Provider = new Web3.providers.HttpProvider('http://localhost:9545');
+      App.web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
       web3 = new Web3(App.web3Provider);
     }
     return App.initContract();
@@ -29,14 +29,13 @@ App = {
     var loader = $("#loader");
     var content = $("#content");
     var statusList = ("Picked Up", "Pending", "Delivered");
-
     loader.show();
     content.hide();
     web3.eth.getCoinbase(function(err, account) {
     if (err === null) {
       App.account = account;
       $("#accountAddress").html("Your Account: " + account);
-    }
+      }
     });
        
 
@@ -58,6 +57,9 @@ App = {
           coInstance.getOrder(i).then(function(order) {
           var account = coInstance.address;
           var disabled = "";
+          var buttonTemplate = "";
+          var selTemplate = "Delivered";
+
           d2 = new Date(order[3]*1000);
           strDate = d2.getFullYear() + "-" + 
             ("00" + (d2.getMonth() + 1)).slice(-2) + "-" + 
@@ -66,12 +68,11 @@ App = {
             ("00" + d2.getMinutes()).slice(-2) + ":" + 
             ("00" + d2.getSeconds()).slice(-2);
           if (order[2] == "Delivered") {disabled = "disabled";}  
-          var buttonTemplate = "";
-          var selTemplate = "Delivered";
+          
           if (order[2] != "Delivered") {
-          var buttonTemplate =  "<button onclick=\"App.addStatus("+order[0]+")\" id=\"button"+order[0]+"\" type=\"button\" class=\"btn btn-primary\"" +disabled+">Submit</button>"
-          var selTemplate = "<select class=\"form-control\" id=\"select"+order[0]+"\">"
-          var selTemplate = selTemplate+` <option value="Created">Created</option>
+            var buttonTemplate =  "<button onclick=\"App.addStatus("+order[0]+")\" id=\"button"+order[0]+"\" type=\"button\" class=\"btn btn-primary\"" +disabled+">Submit</button>"
+            var selTemplate = "<select class=\"form-control\" id=\"select"+order[0]+"\">"
+            var selTemplate = selTemplate+` <option value="Created">Created</option>
                                           <option value="Picked Up">Picked Up</option>
                                           <option value="Delivered">Delivered</option>
                                           </select>`
